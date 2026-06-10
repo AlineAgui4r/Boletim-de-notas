@@ -1,0 +1,247 @@
+@{
+    ViewData["Title"] = "Boletim de Notas";
+    
+   
+
+var disciplinas = ViewBag.Disciplinas as List<string> ?? new List<string>();
+var notas = ViewBag.Notas as List<double> ?? new List<double>();
+    
+    double soma = 0;
+    for (int i = 0; i < notas.Count; i++)
+    {
+        soma += notas[i];
+    }
+    double mediaGeral = soma / notas.Count;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 40px 20px;
+        }
+
+        .boletim-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 700px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            color: #1a1a2e;
+            margin: 0;
+        }
+
+        .header p {
+            color: #888;
+            margin: 5px 0 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        thead tr {
+            background: linear-gradient(90deg, #1a1a2e, #0f3460);
+            color: white;
+        }
+
+        thead th {
+            padding: 14px 18px;
+            text-align: left;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #f0f0f0;
+            transition: background 0.2s;
+        }
+
+        tbody tr:hover {
+            background: #f8f9ff;
+        }
+
+        td {
+            padding: 14px 18px;
+            font-size: 1rem;
+            color: #333;
+        }
+
+        .status-aprovado {
+            background: #d4edda;
+            color: #155724;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+
+        .status-reprovado {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+
+     
+            font-weight: bold;
+            font-size: 1.1rem;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .conceito-A { background: #28a745; }
+        .conceito-B { background: #17a2b8; }
+        .conceito-C { background: #ffc107; color: #333; }
+        .conceito-D { background: #dc3545; }
+
+
+        .footer-media {
+            margin-top: 25px;
+            padding: 20px;
+            background: linear-gradient(90deg, #1a1a2e, #0f3460);
+            border-radius: 12px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-media span {
+            font-size: 1rem;
+            opacity: 0.85;
+        }
+
+        .footer-media strong {
+            font-size: 1.5rem;
+        }
+
+        .media-status {
+            font-size: 0.85rem;
+            padding: 5px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .media-aprovado { background: #28a745; }
+        .media-reprovado { background: #dc3545; }
+    </style>
+</head>
+<body>
+    <div class="boletim-card">
+
+        <div class="header">
+            <h1>📋 Boletim de Notas</h1>
+            <p>Ano Letivo 2025 — 1º Semestre</p>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Disciplina</th>
+                    <th>Nota</th>
+                    <th>Status</th>     
+                    <th>Conceito</th>   
+                </tr>
+            </thead>
+            <tbody>
+
+                
+                @for (int i = 0; i < disciplinas.Count; i++)
+                {
+                    double nota = notas[i];
+
+                    <tr>
+                        <td>@(i + 1)</td>
+                        <td>@disciplinas[i]</td>
+                        <td><strong>@nota.ToString("F1")</strong></td>
+
+                        <td>
+                            @if (nota >= 5)
+                            {
+                                <span class="status-aprovado">✔ Aprovado</span>
+                            }
+                            else
+                            {
+                                <span class="status-reprovado">✘ Reprovado</span>
+                            }
+                        </td>
+
+                        <td>
+                            @{
+                                string conceito;
+                                string cssConceito;
+
+                                if (nota >= 9)
+                                {
+                                    conceito = "A";
+                                    cssConceito = "conceito-A";
+                                }
+                                else if (nota >= 7)
+                                {
+                                    conceito = "B";
+                                    cssConceito = "conceito-B";
+                                }
+                                else if (nota >= 5)
+                                {
+                                    conceito = "C";
+                                    cssConceito = "conceito-C";
+                                }
+                                else
+                                {
+                                    conceito = "D";
+                                    cssConceito = "conceito-D";
+                                }
+                            }
+                            <span class="conceito @cssConceito">@conceito</span>
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+
+        <div class="footer-media">
+            <span>📊 Média Geral do Aluno</span>
+            <strong>@mediaGeral.ToString("F2")</strong>
+            @if (mediaGeral >= 5)
+            {
+                <span class="media-status media-aprovado">✔ Aprovado</span>
+            }
+            else
+            {
+                <span class="media-status media-reprovado">✘ Reprovado</span>
+            }
+        </div>
+
+    </div>
+</body>
+</html>
